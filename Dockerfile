@@ -7,7 +7,7 @@ COPY .mvn .mvn
 COPY pom.xml .
 COPY src src
 
-ENV JDBC_URL="jdbc:postgresql://172.17.0.3:5432/db?user=app&password=pass"
+ENV JDBC_URL="jdbc:postgresql://localhost:5432/db?user=app&password=pass"
 
 RUN ./mvnw verify
 
