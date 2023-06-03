@@ -22,7 +22,7 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: 'Run database'
-        run: docker run -d --name postgres -v "./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d" -p 5432:5432 -e POSTGRES_USER=app -e POSTGRES_PASSWORD=pass -e POSTGRES_DB=db postgres:alpine
+        run: docker run -d --name postgres -v "$(pwd)/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d" -p 5432:5432 -e POSTGRES_USER=app -e POSTGRES_PASSWORD=pass -e POSTGRES_DB=db postgres:alpine
 
       - name: 'Build image '
         run: |
