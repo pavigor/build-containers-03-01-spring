@@ -1,0 +1,31 @@
+name: Build and deploy
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: 'Checkout the repo'
+        uses: actions/checkout@v3
+
+      - name: 'Set tag'
+        run: echo "BUILD_TAG=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+
+      - name: 'Login to GHCR'
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      - name: 'Run database'
+        run: docker run -d --name postgres -v "./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d" -p 5432:5432 -e POSTGRES_USER=app -e POSTGRES_PASSWORD=pass -e POSTGRES_DB=db postgres:alpine
+
+      - name: 'Build image '
+        run: |
+          docker buildx build . --tag ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG} --tag ghcr.io/${{ github.actor }}/03-01-spring:latest
+          docker push ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG}
+          docker push ghcr.io/${{ github.actor }}/03-01-spring:latest
