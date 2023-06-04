@@ -11,7 +11,7 @@ COPY src src
 
 ENV JDBC_URL="jdbc:postgresql://localhost:5432/db?user=app&password=pass"
 
-RUN  --mount=type=bind,source=$CACHE_DIR,target=/root/.m2,rw ./mvnw verify
+RUN  --mount=type=bind,source=${CACHE_DIR},target=/root/.m2,rw ./mvnw verify
 
 FROM bitnami/java:17 as final
 
