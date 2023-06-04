@@ -25,7 +25,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install --yes postgresql-client
-          sudo apt-get install --only-upgrade docker
+          sudo apt-get install --only-upgrade docker-ce
+          dpkg -l | grep docker
           docker version
 
       - name: 'Checkout the repo'
