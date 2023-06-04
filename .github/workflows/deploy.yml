@@ -44,9 +44,6 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: 'Run database'
-        run: docker run -d --name postgres -v "$(pwd)/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d" -p 5432:5432 -e POSTGRES_USER=app -e POSTGRES_PASSWORD=pass -e POSTGRES_DB=db postgres:alpine
-
       - name: 'Build image '
         run: |
           docker buildx build . --add-host=host.docker.internal:host-gateway --tag ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG} --tag ghcr.io/${{ github.actor }}/03-01-spring:latest
