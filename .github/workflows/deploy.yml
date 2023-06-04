@@ -6,10 +6,33 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
-
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: app
+          POSTGRES_PASSWORD: pass
+          POSTGRES_DB: db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
     steps:
+      - name: 'Install PostgreSQL client'
+        run: |
+          apt-get update
+          apt-get install --yes postgresql-client
+
       - name: 'Checkout the repo'
         uses: actions/checkout@v3
+
+      - name: 'Setup database'
+        run: | 
+          psql -f docker-entrypoint-initdb.d/00_schema.sql postgresql://app:pass@localhost:5432/db
+          psql -f docker-entrypoint-initdb.d/01_data.sql postgresql://app:pass@localhost:5432/db
 
       - name: 'Set tag'
         run: echo "BUILD_TAG=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
@@ -26,6 +49,6 @@ jobs:
 
       - name: 'Build image '
         run: |
-          docker buildx build . --tag ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG} --tag ghcr.io/${{ github.actor }}/03-01-spring:latest
+          docker buildx build . --add-host=host.docker.internal:host-gateway --tag ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG} --tag ghcr.io/${{ github.actor }}/03-01-spring:latest
           docker push ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG}
           docker push ghcr.io/${{ github.actor }}/03-01-spring:latest
