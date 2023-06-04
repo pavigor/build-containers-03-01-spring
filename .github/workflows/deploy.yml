@@ -41,7 +41,9 @@ jobs:
       - if: ${{ steps.cache-maven.outputs.cache-hit != 'true' }}
         name: 'Create dir for maven cache'
         continue-on-error: true
-        run: sudo mkdir ~/.m2
+        run: |
+          mkdir ~/.m2
+          ls -la ~
 
       - name: 'Setup database'
         run: | 
