@@ -1,3 +1,5 @@
+# syntax = docker/dockerfile:latest
+
 FROM bitnami/java:17 as builder
 
 ARG CACHE_DIR=~/.m2
