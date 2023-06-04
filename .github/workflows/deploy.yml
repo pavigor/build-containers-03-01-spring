@@ -29,6 +29,13 @@ jobs:
       - name: 'Checkout the repo'
         uses: actions/checkout@v3
 
+      - name: 'Setup cache'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'liberica'
+          java-version: '17'
+          cache: 'maven'
+
       - name: 'Setup database'
         run: | 
           psql -f docker-entrypoint-initdb.d/00_schema.sql postgresql://app:pass@localhost:5432/db
