@@ -1,6 +1,6 @@
 FROM bitnami/java:17 as builder
 
-ARG CACHE_DIR
+ARG CACHE_DIR=~/.m2
 
 WORKDIR /app
 
