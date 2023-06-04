@@ -54,6 +54,7 @@ jobs:
           cache-to: type=gha,mode=max
           tags: ghcr.io/${{ github.actor }}/03-01-spring:latest
           push: true
+          network: host
 
 #      - name: 'Build image '
 #        run: |
