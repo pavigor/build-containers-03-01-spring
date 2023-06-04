@@ -44,6 +44,8 @@ jobs:
         run: |
           mkdir ~/.m2
           ls -la ~
+          cd ~
+          pwd
 
       - name: 'Setup database'
         run: | 
