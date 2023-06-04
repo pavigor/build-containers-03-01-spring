@@ -44,8 +44,19 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
 
-      - name: 'Build image '
-        run: |
-          docker buildx build . --network host --tag ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG} --tag ghcr.io/${{ github.actor }}/03-01-spring:latest
-          docker push ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG}
-          docker push ghcr.io/${{ github.actor }}/03-01-spring:latest
+      - uses: docker/setup-buildx-action@v1
+
+      - name: 'Build and push image'
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: ghcr.io/${{ github.actor }}/03-01-spring:latest
+          push: true
+
+#      - name: 'Build image '
+#        run: |
+#          docker buildx build . --network host --tag ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG} --tag ghcr.io/${{ github.actor }}/03-01-spring:latest
+#          docker push ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG}
+#          docker push ghcr.io/${{ github.actor }}/03-01-spring:latest
