@@ -46,6 +46,6 @@ jobs:
 
       - name: 'Build image '
         run: |
-          docker buildx build . --add-host=host.docker.internal:host-gateway --tag ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG} --tag ghcr.io/${{ github.actor }}/03-01-spring:latest
+          docker buildx build . --network host --tag ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG} --tag ghcr.io/${{ github.actor }}/03-01-spring:latest
           docker push ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG}
           docker push ghcr.io/${{ github.actor }}/03-01-spring:latest
