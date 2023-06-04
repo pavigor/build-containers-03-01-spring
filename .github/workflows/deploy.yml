@@ -43,9 +43,7 @@ jobs:
         continue-on-error: true
         run: |
           mkdir ~/.m2
-          ls -la ~
-          cd ~
-          pwd
+          docker version
 
       - name: 'Setup database'
         run: | 
