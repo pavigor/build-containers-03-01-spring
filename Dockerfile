@@ -9,7 +9,7 @@ COPY src src
 
 ENV JDBC_URL="jdbc:postgresql://localhost:5432/db?user=app&password=pass"
 
-RUN ./mvnw verify
+RUN  --mount=type=bind,source=./.m2,target=/root/.m2 ./mvnw verify
 
 FROM bitnami/java:17 as final
 

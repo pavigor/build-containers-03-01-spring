@@ -30,11 +30,18 @@ jobs:
         uses: actions/checkout@v3
 
       - name: 'Setup cache'
-        uses: actions/setup-java@v3
+        id: cache-maven
+        uses: actions/cache@v3
         with:
-          distribution: 'liberica'
-          java-version: '17'
-          cache: 'maven'
+          path: ./.m2
+          key: ${{ runner.os }}-build-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys:
+            ${{ runner.os }}-build-maven-
+
+      - if: ${{ steps.cache-maven.outputs.cache-hit != 'true' }}
+        name: 'Create dir for maven cache'
+        continue-on-error: true
+        run: sudo mkdir ./.m2
 
       - name: 'Setup database'
         run: | 
@@ -65,6 +72,6 @@ jobs:
 
       - name: 'Build image '
         run: |
-          docker buildx build . --network host --cache-from type=gha --cache-to type=gha,mode=max --tag ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG} --tag ghcr.io/${{ github.actor }}/03-01-spring:latest
+          docker buildx build . --network host --tag ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG} --tag ghcr.io/${{ github.actor }}/03-01-spring:latest
           docker push ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG}
           docker push ghcr.io/${{ github.actor }}/03-01-spring:latest
