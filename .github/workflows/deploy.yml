@@ -39,7 +39,7 @@ jobs:
         id: cache-maven
         uses: actions/cache@v3
         with:
-          path: ~/.m2
+          path: .m2
           key: ${{ runner.os }}-build-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys:
             ${{ runner.os }}-build-maven-
@@ -48,7 +48,7 @@ jobs:
         name: 'Create dir for maven cache'
         continue-on-error: true
         run: |
-          mkdir ~/.m2
+          mkdir .m2
 
       - name: 'Setup database'
         run: | 
@@ -67,10 +67,6 @@ jobs:
 
       - name: 'Build image '
         run: |
-          mkdir .m2
-          ls -la
-          pwd
-          echo "Exec build"
-          docker buildx build .  --build-arg CACHE_DIR=.m2 --network host --tag ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG} --tag ghcr.io/${{ github.actor }}/03-01-spring:latest
+          docker buildx build --build-arg CACHE_DIR=.m2 --network host --tag ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG} --tag ghcr.io/${{ github.actor }}/03-01-spring:latest .
           docker push ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG}
           docker push ghcr.io/${{ github.actor }}/03-01-spring:latest
