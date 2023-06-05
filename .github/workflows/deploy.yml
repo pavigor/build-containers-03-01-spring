@@ -34,6 +34,22 @@ jobs:
           psql -f docker-entrypoint-initdb.d/00_schema.sql postgresql://app:pass@localhost:5432/db
           psql -f docker-entrypoint-initdb.d/01_data.sql postgresql://app:pass@localhost:5432/db
 
+      - name: 'Setup cache'
+        id: cache-maven
+        uses: actions/cache@v3
+        with:
+          path: m2
+          key: ${{ runner.os }}-build-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys:
+            ${{ runner.os }}-build-maven-
+
+      - if: ${{ steps.cache-maven.outputs.cache-hit != 'true' }}
+        name: 'Create dir for maven cache'
+        continue-on-error: true
+        run: |
+          mkdir m2    
+          ./mvnw dependency:resolve -Dmaven.repo.local=./m2
+
       - name: 'Set tag'
         run: echo "BUILD_TAG=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
 
