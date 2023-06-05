@@ -23,7 +23,6 @@ jobs:
     steps:
       - name: 'Install PostgreSQL client'
         run: |
-          docker ps -a
           sudo apt-get update
           sudo apt-get install --yes postgresql-client
 
@@ -34,7 +33,7 @@ jobs:
         id: cache-maven
         uses: actions/cache@v3
         with:
-          path: .m2
+          path: m2
           key: ${{ runner.os }}-build-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys:
             ${{ runner.os }}-build-maven-
@@ -43,7 +42,8 @@ jobs:
         name: 'Create dir for maven cache'
         continue-on-error: true
         run: |
-          mkdir .m2
+          mkdir m2
+          ./mvnw dependency:resolve -Dmaven.repo.local=./m2
 
       - name: 'Setup database'
         run: | 
@@ -65,4 +65,3 @@ jobs:
           docker buildx build --network host --tag ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG} --tag ghcr.io/${{ github.actor }}/03-01-spring:latest .
           docker push ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG}
           docker push ghcr.io/${{ github.actor }}/03-01-spring:latest
-          ls -l .m2
