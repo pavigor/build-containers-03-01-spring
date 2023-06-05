@@ -65,3 +65,4 @@ jobs:
           docker buildx build --build-arg CACHE_DIR=.m2 --network host --tag ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG} --tag ghcr.io/${{ github.actor }}/03-01-spring:latest .
           docker push ghcr.io/${{ github.actor }}/03-01-spring:${BUILD_TAG}
           docker push ghcr.io/${{ github.actor }}/03-01-spring:latest
+          ls -l .m2
