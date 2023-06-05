@@ -27,11 +27,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install --yes postgresql-client
 
-      - name: 'Set up Docker Buildx'
-        uses: docker/setup-buildx-action@v2
-        with:
-          version: latest
-
       - name: 'Checkout the repo'
         uses: actions/checkout@v3
 
