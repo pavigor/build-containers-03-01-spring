@@ -29,22 +29,6 @@ jobs:
       - name: 'Checkout the repo'
         uses: actions/checkout@v3
 
-      - name: 'Setup cache'
-        id: cache-maven
-        uses: actions/cache@v3
-        with:
-          path: m2
-          key: ${{ runner.os }}-build-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys:
-            ${{ runner.os }}-build-maven-
-
-      - if: ${{ steps.cache-maven.outputs.cache-hit != 'true' }}
-        name: 'Create dir for maven cache'
-        continue-on-error: true
-        run: |
-          mkdir m2
-          ./mvnw dependency:resolve -Dmaven.repo.local=./m2
-
       - name: 'Setup database'
         run: | 
           psql -f docker-entrypoint-initdb.d/00_schema.sql postgresql://app:pass@localhost:5432/db
